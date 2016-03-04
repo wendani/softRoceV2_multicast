@@ -1,0 +1,3 @@
+probe kprobe.module("ib_rxe").function("rxe_rcv_mcast_pkt") {
+    print_backtrace();
+}
