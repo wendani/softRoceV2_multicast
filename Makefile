@@ -1,4 +1,4 @@
-obj-$(CONFIG_INFINIBAND_RXE) += ib_rxe.o
+obj-m += ib_rxe.o
 
 ib_rxe-y := \
 	rxe.o \
@@ -22,3 +22,12 @@ ib_rxe-y := \
 	rxe_task.o \
 	rxe_net.o \
 	rxe_net_sysfs.o
+
+all:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules
+
+install:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) modules_install
+
+clean:
+	make -C /lib/modules/$(shell uname -r)/build M=$(PWD) clean
