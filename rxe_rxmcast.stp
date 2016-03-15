@@ -1,3 +1,11 @@
 probe kprobe.module("ib_rxe").function("rxe_rcv_mcast_pkt") {
     print_backtrace();
+    printf("\n");
+}
+
+probe kprobe.module("ib_rxe").function("rxe_pool_get_key").return {
+    printf("return value from rxe_pool_get_key: %s\n", returnstr(2));
+    print_backtrace();
+    printf("return value from rxe_pool_get_key: 0x%x\n", returnval());
+    printf("\n");
 }

@@ -109,6 +109,7 @@ static int mcast_add(struct rxe_dev *rxe, union ib_gid *mgid)
 	int err;
 	unsigned char ll_addr[ETH_ALEN];
 
+	// parse if ipv4 address or ipv6 address
 	ipv6_eth_mc_map((struct in6_addr *)mgid->raw, ll_addr);
 	err = dev_mc_add(rxe->ndev, ll_addr);
 
@@ -195,7 +196,7 @@ static int rxe_udp_encap_recv(struct sock *sk, struct sk_buff *skb)
 	pkt->rxe = rxe;
 	pkt->port_num = net_to_port(ndev);
 	pkt->hdr = (u8 *)(udph + 1);
-	pkt->mask = RXE_GRH_MASK;
+//	pkt->mask = RXE_GRH_MASK;   // GRH header is no longer present in a rocev2 packet
 	pkt->paylen = be16_to_cpu(udph->len) - sizeof(*udph);
 
 	return rxe_rcv(skb);

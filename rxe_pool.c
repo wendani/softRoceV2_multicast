@@ -34,6 +34,8 @@
 #include "rxe.h"
 #include "rxe_loc.h"
 
+#include "rxe_debug.h"
+
 /* info about object pools
    note that mr, fmr and mw share a single index space
    so that one can map an lkey to the correct type of object */
@@ -495,6 +497,11 @@ void *rxe_pool_get_key(struct rxe_pool *pool, void *key)
 	while (node) {
 		elem = rb_entry(node, struct rxe_pool_entry, node);
 
+#ifdef DEBUG_RCV_MCAST
+		printk(KERN_INFO "rxe_pool_get_key(): subnet_prefix: %016llx, interface_id: %016llx",
+		        ((union ib_gid *)((u8 *)elem + pool->key_offset))->global.subnet_prefix,
+		        ((union ib_gid *)((u8 *)elem + pool->key_offset))->global.interface_id);
+#endif
 		cmp = memcmp((u8 *)elem + pool->key_offset,
 			     key, pool->key_size);
 

@@ -1,0 +1,55 @@
+return value from rxe_pool_get_key: 0x0
+Returning from:  0xffffffffa09d7060 : rxe_pool_get_key+0x0/0x130 [ib_rxe]
+Returning to  :  0xffffffffa09dded2 : rxe_mcast_get_grp+0x42/0x120 [ib_rxe]
+ 0xffffffffa09d8ccc : rxe_attach_mcast+0x3c/0xa0 [ib_rxe] (inexact)
+ 0xffffffffa05abfb5 : ib_attach_mcast+0x35/0x50 [ib_core] (inexact)
+ 0xffffffffa06d5b37 : ib_uverbs_attach_mcast+0x147/0x1a0 [ib_uverbs] (inexact)
+ 0xffffffffa06cf473 : ib_uverbs_write+0xe3/0x320 [ib_uverbs] (inexact)
+ 0xffffffff812730fe : fsnotify+0x9e/0x770 [kernel] (inexact)
+ 0xffffffff8122c547 : __vfs_write+0x37/0x110 [kernel] (inexact)
+ 0xffffffff812e38c3 : security_file_permission+0x23/0xa0 [kernel] (inexact)
+ 0xffffffff8122ca06 : rw_verify_area+0x56/0xe0 [kernel] (inexact)
+ 0xffffffff8122cc79 : vfs_write+0xa9/0x1b0 [kernel] (inexact)
+ 0xffffffff8122db38 : sys_write+0x58/0xd0 [kernel] (inexact)
+ 0xffffffff8171992e : system_call_fastpath+0x12/0x76 [kernel] (inexact)
+return value from rxe_pool_get_key: 0x0
+
+ 0xffffffffa09d6230 : rxe_rcv_mcast_pkt+0x0/0x290 [ib_rxe]
+ 0xffffffffa09d66db : rxe_rcv+0x21b/0x250 [ib_rxe]
+ 0xffffffffa09deb31 : rxe_udp_encap_recv+0xa1/0xd0 [ib_rxe]
+ 0xffffffff8164f319 : udp_queue_rcv_skb+0x309/0x590 [kernel]
+ 0xffffffff8164fc11 : __udp4_lib_rcv+0x151/0xad0 [kernel]
+ 0xffffffff81650c0a : udp_rcv+0x1a/0x20 [kernel]
+ 0xffffffff81616feb : ip_local_deliver_finish+0x12b/0x3d0 [kernel]
+ 0xffffffff816174c9 : ip_local_deliver+0x59/0xc0 [kernel]
+ 0xffffffff81616a68 : ip_rcv_finish+0x168/0x5c0 [kernel]
+ 0xffffffff816177f4 : ip_rcv+0x2c4/0x430 [kernel]
+ 0xffffffff815ccedf : __netif_receive_skb_core+0x77f/0xc90 [kernel]
+ 0xffffffff815cd408 : __netif_receive_skb+0x18/0x60 [kernel]
+ 0xffffffff815cd490 : netif_receive_skb_internal+0x40/0x1f0 [kernel]
+ 0xffffffff815cd668 : netif_receive_skb_sk+0x28/0x60 [kernel]
+ 0xffffffffa053bad7 [cxgb4]
+
+return value from rxe_pool_get_key: 0xffff8800820f60b0
+Returning from:  0xffffffffa09d7060 : rxe_pool_get_key+0x0/0x130 [ib_rxe]
+Returning to  :  0xffffffffa09d6286 : rxe_rcv_mcast_pkt+0x56/0x290 [ib_rxe]
+ 0xffff880031546a00
+return value from rxe_pool_get_key: 0xffff8800820f60b0
+
+return value from rxe_pool_get_key: 0xffff8800820f60b0
+Returning from:  0xffffffffa09d7060 : rxe_pool_get_key+0x0/0x130 [ib_rxe]
+Returning to  :  0xffffffffa09de128 : rxe_mcast_drop_grp_elem+0x28/0x180 [ib_rxe]
+ 0xffff88008264bf18
+ 0xffffffffa09d792d : rxe_detach_mcast+0x2d/0x30 [ib_rxe] (inexact)
+ 0xffffffffa05ac005 : ib_detach_mcast+0x35/0x50 [ib_core] (inexact)
+ 0xffffffffa06d5c28 : ib_uverbs_detach_mcast+0x98/0x150 [ib_uverbs] (inexact)
+ 0xffffffffa06cf473 : ib_uverbs_write+0xe3/0x320 [ib_uverbs] (inexact)
+ 0xffffffff8122c547 : __vfs_write+0x37/0x110 [kernel] (inexact)
+ 0xffffffff812e38c3 : security_file_permission+0x23/0xa0 [kernel] (inexact)
+ 0xffffffff8122ca06 : rw_verify_area+0x56/0xe0 [kernel] (inexact)
+ 0xffffffff8122cc79 : vfs_write+0xa9/0x1b0 [kernel] (inexact)
+ 0xffffffff81025bac : do_audit_syscall_entry+0x6c/0x70 [kernel] (inexact)
+ 0xffffffff8122db38 : sys_write+0x58/0xd0 [kernel] (inexact)
+ 0xffffffff8171992e : system_call_fastpath+0x12/0x76 [kernel] (inexact)
+return value from rxe_pool_get_key: 0xffff8800820f60b0
+

@@ -76,4 +76,12 @@ void rxe_net_down(struct net_device *ndev);
 int rxe_net_init(void);
 void rxe_net_exit(void);
 
+static inline void ipv6_mcast_addr_set_v4mapped(const __be32 addr,
+                                                struct in6_addr *v4mapped)
+{
+    ipv6_addr_set(v4mapped,
+                    htonl(0xFF0E0000), 0,
+                    htonl(0x0000FFFF), addr);
+}
+
 #endif /* RXE_NET_H */

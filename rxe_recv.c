@@ -36,6 +36,8 @@
 #include "rxe.h"
 #include "rxe_loc.h"
 
+#include "rxe_debug.h"
+
 static int check_type_state(struct rxe_dev *rxe, struct rxe_pkt_info *pkt,
 			    struct rxe_qp *qp)
 {
@@ -176,6 +178,7 @@ static int hdr_check(struct rxe_pkt_info *pkt)
 	u32 qpn = bth_qpn(pkt);
 	int index;
 	int err;
+	struct sk_buff *skb = PKT_TO_SKB(pkt);
 
 	if (unlikely(bth_tver(pkt) != BTH_TVER)) {
 		pr_warn("bad tver\n");
@@ -205,14 +208,19 @@ static int hdr_check(struct rxe_pkt_info *pkt)
 		if (unlikely(err))
 			goto err2;
 	} else {
-		if (unlikely((pkt->mask & RXE_GRH_MASK) == 0)) {
-			pr_warn("no grh for mcast qpn\n");
-			goto err1;
-		}
-		if (unlikely(dgid->raw[0] != 0xff)) {
-			pr_warn("bad dgid for mcast qpn\n");
-			goto err1;
-		}
+	    /**
+	     * we remove RXE_GRH_MASK from pkt->mask
+	     * as GRH is no longer present in a rocev2 packet
+	     */
+//		if (unlikely((pkt->mask & RXE_GRH_MASK) == 0)) {
+//			pr_warn("no grh for mcast qpn\n");
+//			goto err1;
+//		}
+
+//		if (unlikely(dgid->raw[0] != 0xff)) {
+//			pr_warn("bad dgid for mcast qpn\n");
+//			goto err1;
+//		}
 	}
 
 	pkt->qp = qp;
@@ -235,7 +243,11 @@ static inline void rxe_rcv_pkt(struct rxe_dev *rxe,
 		rxe_comp_queue_pkt(rxe, pkt->qp, skb);
 }
 
+#ifdef DEBUG_RCV_MCAST
+void rxe_rcv_mcast_pkt(struct rxe_dev *rxe, struct sk_buff *skb)
+#else
 static void rxe_rcv_mcast_pkt(struct rxe_dev *rxe, struct sk_buff *skb)
+#endif
 {
 	struct rxe_pkt_info *pkt = SKB_TO_PKT(skb);
 	struct rxe_mc_grp *mcg;
@@ -246,16 +258,30 @@ static void rxe_rcv_mcast_pkt(struct rxe_dev *rxe, struct sk_buff *skb)
 	union ib_gid dgid;
 	int err;
 
-	if (skb->protocol == htons(ETH_P_IP))
-		ipv6_addr_set_v4mapped(ip_hdr(skb)->daddr,
-				       (struct in6_addr *)&dgid);
+	if (skb->protocol == htons(ETH_P_IP)) {
+#ifdef DEBUG_RCV_MCAST
+	    printk(KERN_INFO "rxe_rcv_mcast_pkt: skb->protocol indicates ipv4\n");
+#endif
+//		ipv6_addr_set_v4mapped(ip_hdr(skb)->daddr,
+//				       (struct in6_addr *)&dgid);
+	    ipv6_mcast_addr_set_v4mapped(ip_hdr(skb)->daddr,
+	                    (struct in6_addr *)&dgid);
+#ifdef DEBUG_RCV_MCAST
+		printk(KERN_INFO "rxe_rcv_mcast_pkt(): subnet_prefix: %016llx, interface_id: %016llx",
+		        dgid.global.subnet_prefix, dgid.global.interface_id);
+#endif
+    }
 	else if (skb->protocol == htons(ETH_P_IPV6))
 		memcpy(&dgid, &ipv6_hdr(skb)->daddr, sizeof(dgid));
 
 	/* lookup mcast group corresponding to mgid, takes a ref */
 	mcg = rxe_pool_get_key(&rxe->mc_grp_pool, &dgid);
-	if (!mcg)
+	if (!mcg) {
+#ifdef DEBUG_RCV_MCAST
+	    printk(KERN_INFO "rxe_rcv_mcast_pkt: rxe_pool_get_key() returns NULL\n");
+#endif
 		goto err1;	/* mcast group not registered */
+	}
 
 	spin_lock_bh(&mcg->mcg_lock);
 
@@ -295,6 +321,9 @@ err1:
 	if (skb)
 		kfree_skb(skb);
 }
+#ifdef DEBUG_RCV_MCAST
+//EXPORT_SYMBOL(rxe_rcv_mcast_pkt);
+#endif
 
 /* rxe_rcv is called from the interface driver */
 int rxe_rcv(struct sk_buff *skb)
